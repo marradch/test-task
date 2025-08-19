@@ -25,4 +25,15 @@ export default defineConfig({
             vue: 'vue/dist/vue.esm-bundler.js',
         },
     },
+    server: {
+        host: '0.0.0.0',   // слушаем все интерфейсы внутри контейнера
+        port: 5173,
+        strictPort: true,
+        hmr: {
+          host: 'localhost',  // или IP твоего ПК, если не работает localhost
+        },
+        watch: {
+          usePolling: true,  // фикс для Docker/Linux
+        },
+      },
 });
