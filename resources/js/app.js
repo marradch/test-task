@@ -6,33 +6,7 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
-import LoginComponent from "./components/LoginComponent.vue";
-import TasksComponent from "./components/TasksComponent.vue";
-import CreateTaskComponent from "./components/CreateTaskComponent.vue";
-import EditTaskComponent from "./components/EditTaskComponent.vue";
-
-const routes = [
-    {
-        path: '/',
-        component: LoginComponent,
-    },
-    {
-        path: '/tasks',
-        component: TasksComponent,
-    },
-    {
-        path: '/task-edit/:id',
-        name: 'task-edit',
-        component: EditTaskComponent,
-    },
-    {
-        path: '/create-task',
-        component: CreateTaskComponent,
-    }
-];
-
-const router = createRouter({routes, history: createWebHistory()});
+import router from "./router";
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin

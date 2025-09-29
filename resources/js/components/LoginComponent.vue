@@ -2,8 +2,6 @@
     <div v-if="error" class="alert alert-danger mt-2" role="alert">
         {{ error }}
     </div>
-
-    <router-link v-if="isAuthorised" class="btn btn-primary mt-2" to="/tasks">Tasks</router-link>
     <div v-else class="row justify-content-center mt-2">
         <div class="col-md-6">
             <div class="card">
