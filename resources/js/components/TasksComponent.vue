@@ -37,90 +37,68 @@
     </div>
 </template>
 
-<script>
-export default {
-    data(){
-        return {
-            tasks: [],
-            pagesCount: 0,
-            currentPage: 1,
-        }
-    },
-    methods: {
-        loadTasks(page) {
-            var component = this;
-            var token = sessionStorage.getItem('sanctum_token');
-            axios.get(`/api/tasks?page=${page}`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(function (response) {
-                    if (response?.data?.data != undefined) {
-                        component.tasks = response?.data?.data;
-                        let pagesCount = response?.data?.meta.total / response?.data?.meta.per_page;
-                        pagesCount = parseInt(pagesCount);
-                        if (response?.data?.meta.total - pagesCount * response?.data?.meta.per_page) {
-                            pagesCount++;
-                        }
-                        component.pagesCount = pagesCount;
-                        component.currentPage = response?.data?.meta.current_page;
-                    }
-                })
-                .catch(function (error) {
-                    if (error?.response?.data?.message != undefined) {
-                        component.error = error.response.data.message;
-                    }
-                    console.log(error);
-                });
-        },
-        deleteTask(id) {
-            const confirmed = window.confirm("Are you sure you want to delete this task?");
+<script setup>
+import { ref } from 'vue'
 
-            if (!confirmed) {
-                return;
+const tasks = ref([]);
+const pagesCount = ref(0);
+const currentPage = ref(1);
+
+loadTasks(1)
+
+function loadTasks(page) {
+    axios.get(`/api/tasks?page=${page}`)
+        .then(function (response) {
+            if (response?.data?.data != undefined) {
+                tasks.value = response?.data?.data;
+                let pagesCountResponse = response?.data?.meta.total / response?.data?.meta.per_page;
+                pagesCountResponse = parseInt(pagesCountResponse);
+                if (response?.data?.meta.total - pagesCountResponse * response?.data?.meta.per_page) {
+                    pagesCountResponse++;
+                }
+                pagesCount.value = pagesCountResponse;
+                currentPage.value = response?.data?.meta.current_page;
             }
-            var component = this;
-            axios.delete(`/api/tasks/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('sanctum_token')}`
-                }
-            })
-                .then(function (response) {
-                    if (response?.data?.success) {
-                        component.loadTasks(1);
-                    }
-                })
-                .catch(function (error) {
-                    if (error?.response?.data?.message != undefined) {
-                        component.error = error.response.data.message;
-                    }
-                    console.log(error);
-                });
-        },
-        setTaskCompletion(taskId, event) {
-            const isChecked = event.target.checked ? 1 : 0;
-            axios.patch(`/api/tasks/set-completion/${taskId}`, {completed: isChecked}, {
-                headers: {
-                    'Authorization': `Bearer ${sessionStorage.getItem('sanctum_token')}`
-                }
-            })
-                .then(function (response) {
-                })
-                .catch(function (error) {
-                    if (error?.response?.data?.message != undefined) {
-                        component.error = error.response.data.message;
-                    }
-                    console.log(error);
-                });
-        }
-    },
-    mounted() {
-        this.loadTasks(1);
+        })
+        .catch(function (errorResponse) {
+            if (errorResponse?.response?.data?.message != undefined) {
+                error.value = errorResponse.response.data.message;
+            }
+            console.log(errorResponse);
+        });
+}
+
+function deleteTask(id) {
+    const confirmed = window.confirm("Are you sure you want to delete this task?");
+
+    if (!confirmed) {
+        return;
     }
+
+    axios.delete(`/api/tasks/${id}`)
+        .then(function (response) {
+            if (response?.data?.success) {
+                loadTasks(1);
+            }
+        })
+        .catch(function (errorResponse) {
+            if (errorResponse?.response?.data?.message != undefined) {
+                error.value = errorResponse.response.data.message;
+            }
+            console.log(errorResponse);
+        });
+}
+
+function setTaskCompletion(taskId, event) {
+    const isChecked = event.target.checked ? 1 : 0;
+    axios.patch(`/api/tasks/set-completion/${taskId}`, {completed: isChecked})
+        .then(function (response) {
+        })
+        .catch(function (errorResponse) {
+            if (errorResponse?.response?.data?.message != undefined) {
+                error.value = errorResponse.response.data.message;
+            }
+            console.log(errorResponse);
+        });
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -30,58 +30,48 @@
     </div>
 </template>
 
-<script>
-export default {
-    data(){
-        return {
-            title: '',
-            description: '',
-            error: ''
+<script setup>
+
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const title = ref('')
+const description = ref('')
+const error = ref('')
+
+const router = useRouter()
+const route = useRoute()
+
+axios.get(`/api/tasks/${route.params.id}`)
+    .then(function (response) {
+        if (response?.data?.data != undefined) {
+            title.value = response?.data?.data?.title;
+            description.value = response?.data?.data?.description;
         }
-    },
-    methods: {
-        editTask(){
-            var component = this;
-            var token = sessionStorage.getItem('sanctum_token');
-            axios.put(`/api/tasks/${this.$route.params.id}`,{title: this.title, description: this.description}, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(function (response) {
-                    if (response.data.data != undefined) {
-                        component.$router.push('/tasks');
-                    }
-                })
-                .catch(function (error) {
-                    if (error?.response?.data?.message != undefined) {
-                        component.error = error.response.data.message;
-                    }
-                });
+    })
+    .catch((errorResponse) => {
+        if (errorResponse?.response?.status === 404) {
+            router.push({ name: 'not-found' });
+        } else if (errorResponse?.response?.data?.message != undefined) {
+            error.value = errorResponse.response.data.message;
         }
-    },
-    mounted() {
-        var component = this;
-        var token = sessionStorage.getItem('sanctum_token');
-        axios.get(`/api/tasks/${this.$route.params.id}`,{
-            headers: {
-                'Authorization': `Bearer ${token}`
+    });
+
+function editTask(){
+    axios.put(`/api/tasks/${route.params.id}`,{
+        title: title.value,
+        description: description.value
+    })
+        .then(function (response) {
+            if (response.data.data != undefined) {
+                router.push('/tasks');
             }
         })
-            .then(function (response) {
-                if (response?.data?.data != undefined) {
-                    component.title = response?.data?.data?.title;
-                    component.description = response?.data?.data?.description;
-                }
-            })
-            .catch((error) => {
-                if (error?.response?.status === 404) {
-                    component.$router.push({ name: 'not-found' });
-                } else if (error?.response?.data?.message != undefined) {
-                    component.error = error.response.data.message;
-                }
-            });
-    }
+        .catch(function (errorResponse) {
+            if (errorResponse?.response?.data?.message != undefined) {
+                error.value = errorResponse.response.data.message;
+            }
+        });
 }
 </script>
 

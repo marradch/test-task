@@ -24,7 +24,7 @@
                             <router-link class="nav-link" to="/tasks">List of tasks</router-link>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-link nav-link" @click="logout">Logout</button>
+                            <button class="btn btn-link nav-link" @click="logoutUser">Logout</button>
                         </li>
                     </template>
                 </ul>
@@ -38,6 +38,11 @@ import { useRouter } from 'vue-router'
 import { isAuthenticated, logout } from '../../store/auth'
 
 const router = useRouter()
+
+function logoutUser() {
+    logout()
+    router.replace({ path: '/', query: { t: Date.now() } })
+}
 </script>
 
 <style scoped>

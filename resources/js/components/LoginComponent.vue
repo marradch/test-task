@@ -23,33 +23,33 @@
         </div>
     </div>
 </template>
-<script>
+
+<script setup>
 import { login } from '../store/auth'
 
-export default {
-    data(){
-        return {
-            userEmail: '',
-            userPassword: '',
-            error: '',
-        }
-    },
-    methods: {
-        loginUser(){
-            var component = this;
-            axios.post('/api/login',{email: this.userEmail, password: this.userPassword})
-                .then(function (response) {
-                    if (response.data.data.token != undefined) {
-                        login(response.data.data.token)
-                        component.$router.push('/tasks');
-                    }
-                })
-                .catch(function (error) {
-                    if (error?.response?.data?.message != undefined) {
-                        component.error = error.response.data.message;
-                    }
-                });
-        },
-    },
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const userEmail = ref('')
+const userPassword = ref('')
+const error = ref('')
+
+const router = useRouter()
+
+function loginUser(){
+    axios.post('/api/login',{
+        email: userEmail.value, password: userPassword.value
+    })
+        .then(function (response) {
+            if (response.data.data.token != undefined) {
+                login(response.data.data.token)
+                router.push('/tasks');
+            }
+        })
+        .catch(function (error) {
+            if (error?.response?.data?.message != undefined) {
+                error.value = error.response.data.message;
+            }
+        });
 }
 </script>
