@@ -74,8 +74,10 @@ export default {
                     component.description = response?.data?.data?.description;
                 }
             })
-            .catch(function (error) {
-                if (error?.response?.data?.message != undefined) {
+            .catch((error) => {
+                if (error?.response?.status === 404) {
+                    component.$router.push({ name: 'not-found' });
+                } else if (error?.response?.data?.message != undefined) {
                     component.error = error.response.data.message;
                 }
             });

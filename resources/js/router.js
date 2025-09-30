@@ -3,6 +3,7 @@ import LoginComponent from "./components/LoginComponent.vue";
 import TasksComponent from "./components/TasksComponent.vue";
 import CreateTaskComponent from "./components/CreateTaskComponent.vue";
 import EditTaskComponent from "./components/EditTaskComponent.vue";
+import NotFoundPage from "./components/NotFoundPage.vue";
 import TutorialSteps from "./components/TutorialSteps.ts.vue";
 import { isAuthenticated } from './store/auth'
 
@@ -32,6 +33,11 @@ const routes = [
         path: '/tutorial',
         component: TutorialSteps,
     },
+    {
+        path: '/not-found',
+        name: 'not-found',
+        component: NotFoundPage
+    }
 ];
 
 const router = createRouter({
