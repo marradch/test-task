@@ -1,10 +1,4 @@
 <template>
-    <div class="row justify-content-center mt-2">
-        <div class="col-md-6">
-            <router-link class="btn btn-primary mt-2" to="/tasks">Back</router-link>
-        </div>
-    </div>
-
     <div v-if="error" class="alert alert-danger mt-2" role="alert">
         {{ error }}
     </div>

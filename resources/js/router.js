@@ -4,6 +4,7 @@ import TasksComponent from "./components/TasksComponent.vue";
 import CreateTaskComponent from "./components/CreateTaskComponent.vue";
 import EditTaskComponent from "./components/EditTaskComponent.vue";
 import TutorialSteps from "./components/TutorialSteps.ts.vue";
+import { isAuthenticated } from './store/auth'
 
 const routes = [
     {
@@ -33,19 +34,22 @@ const routes = [
     },
 ];
 
-const router = createRouter({routes, history: createWebHashHistory()});
+const router = createRouter({
+    routes,
+    history: createWebHashHistory(),
+    linkActiveClass: 'active',
+    linkExactActiveClass: 'active'
+});
 
 router.beforeEach((to, from, next) => {
-    const token = sessionStorage.getItem('sanctum_token')
-
     if (to.path !== '/login') {
-        if (token) {
+        if (isAuthenticated.value) {
             next()
         } else {
             next('/login')
         }
     } else {
-        if (token) {
+        if (isAuthenticated.value) {
             next('/tasks')
         } else {
             next()

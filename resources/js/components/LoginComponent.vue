@@ -24,13 +24,14 @@
     </div>
 </template>
 <script>
+import { login } from '../store/auth'
+
 export default {
     data(){
         return {
             userEmail: '',
             userPassword: '',
             error: '',
-            isAuthorised: false,
         }
     },
     methods: {
@@ -39,8 +40,8 @@ export default {
             axios.post('/api/login',{email: this.userEmail, password: this.userPassword})
                 .then(function (response) {
                     if (response.data.data.token != undefined) {
+                        login(response.data.data.token)
                         component.$router.push('/tasks');
-                        sessionStorage.setItem('sanctum_token', response.data.data.token);
                     }
                 })
                 .catch(function (error) {
@@ -50,8 +51,5 @@ export default {
                 });
         },
     },
-    mounted() {
-        this.isAuthorised = sessionStorage.getItem('sanctum_token');
-    }
 }
 </script>
