@@ -1,6 +1,6 @@
 <template>
     <h1>Tasks</h1>
-    <router-link class="btn btn-primary" to="/create-task">Create new task</router-link>
+    <button class="btn btn-primary" @click="showModal = true">Create new task</button>
     <table class="table">
         <thead>
         <tr>
@@ -37,16 +37,22 @@
             </li>
         </ul>
     </div>
+    <Modal v-if="showModal" title="Create task" @close="showModal = false">
+        <CreateTaskForm @created="showModal = false"/>
+    </Modal>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { handleAPIError } from '../helpers/helpers';
 import StatusToggle from './common/StatusToggle.vue';
+import Modal from './common/Modal.vue';
+import CreateTaskForm from './common/CreateTaskForm.vue';
 
 const tasks = ref([]);
 const pagesCount = ref(0);
 const currentPage = ref(1);
+const showModal = ref(false)
 
 loadTasks(1)
 

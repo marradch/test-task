@@ -12,7 +12,4 @@ import { computed } from 'vue'
 const alertClass = computed(() =>
     'alert-' + alertType.value
 )
-
-console.log(alertClass);
-
 </script>
