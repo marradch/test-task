@@ -22,12 +22,12 @@
 </template>
 
 <script setup>
-import { login } from '../store/auth'
+import { login } from '../../store/auth'
 
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { handleAPIError } from '../helpers/helpers';
+import { handleAPIError } from '../../helpers/helpers';
 
 const userEmail = ref('')
 const userPassword = ref('')

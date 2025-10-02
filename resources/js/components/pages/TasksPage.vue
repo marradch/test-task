@@ -44,10 +44,10 @@
 
 <script setup>
 import { ref } from 'vue'
-import { handleAPIError } from '../helpers/helpers';
-import StatusToggle from './common/StatusToggle.vue';
-import Modal from './common/Modal.vue';
-import CreateTaskForm from './common/CreateTaskForm.vue';
+import { handleAPIError } from '../../helpers/helpers';
+import StatusToggle from '../common/StatusToggle.vue';
+import Modal from '../common/Modal.vue';
+import CreateTaskForm from '../common/CreateTaskForm.vue';
 
 const tasks = ref([]);
 const pagesCount = ref(0);

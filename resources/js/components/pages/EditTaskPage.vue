@@ -31,8 +31,8 @@
 
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { handleAPIError } from '../helpers/helpers';
-import { setInfo } from '../store/alertMessages';
+import { handleAPIError } from '../../helpers/helpers';
+import { setInfo } from '../../store/alertMessages';
 
 const title = ref('')
 const description = ref('')

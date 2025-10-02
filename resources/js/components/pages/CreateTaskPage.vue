@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import CreateTaskForm from './common/CreateTaskForm.vue';
+import CreateTaskForm from '../common/CreateTaskForm.vue';
 </script>
 
 <style scoped>

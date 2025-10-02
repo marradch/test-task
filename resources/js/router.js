@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
-import LoginComponent from "./components/LoginComponent.vue";
-import TasksComponent from "./components/TasksComponent.vue";
-import CreateTaskComponent from "./components/CreateTaskComponent.vue";
-import EditTaskComponent from "./components/EditTaskComponent.vue";
-import NotFoundPage from "./components/NotFoundPage.vue";
-import TutorialSteps from "./components/TutorialSteps.ts.vue";
+import LoginComponent from "./components/pages/LoginPage.vue";
+import TasksComponent from "./components/pages/TasksPage.vue";
+import CreateTaskComponent from "./components/pages/CreateTaskPage.vue";
+import EditTaskComponent from "./components/pages/EditTaskPage.vue";
+const NotFoundPage = () => import(/* webpackChunkName: "not-found" */ './components/pages/NotFoundPage.vue')
+const TutorialSteps = () => import(/* webpackChunkName: "tasks-page" */ './components/pages/TutorialSteps.ts.vue')
 import { isAuthenticated } from './store/auth'
 
 const routes = [
