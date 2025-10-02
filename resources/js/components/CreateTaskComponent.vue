@@ -26,6 +26,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { handleAPIError } from '../helpers/helpers';
+import { setInfo } from '../store/alertMessages';
 
 const title = ref('')
 const description = ref('')
@@ -41,6 +42,7 @@ function createTask(){
             if (response.data.data != undefined) {
                 router.push('/tasks')
             }
+            setInfo('Task successfully created')
         })
         .catch(handleAPIError)
 }

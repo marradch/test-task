@@ -1,11 +1,12 @@
-import { ref } from 'vue'
-import { error, setError } from '../store/alertMessages.js'
+import { setError } from '../store/alertMessages.js'
 
 export function handleAPIError(errorResponse) {
+    let errorText = '';
     if (errorResponse?.response?.data?.message != undefined) {
-        error.value = errorResponse.response.data.message;
+        errorText = errorResponse.response.data.message;
     } else {
-        error.value = 'Unknown Error';
+        errorText = 'Unknown Error';
     }
+    setError(errorText)
     console.log(errorResponse);
 }

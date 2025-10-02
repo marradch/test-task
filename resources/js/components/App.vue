@@ -1,10 +1,7 @@
 <template>
     <div>
         <Header />
-
-        <div v-if="error" class="alert alert-danger mt-2" role="alert">
-            {{ error }}
-        </div>
+        <Alert />
 
         <main class="container">
             <router-view />
@@ -14,5 +11,5 @@
 
 <script setup>
 import Header from './common/HeaderComponent.vue'
-import { error } from '../store/alertMessages.js'
+import Alert from './common/Alert.vue'
 </script>

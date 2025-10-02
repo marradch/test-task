@@ -32,6 +32,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { handleAPIError } from '../helpers/helpers';
+import { setInfo } from '../store/alertMessages';
 
 const title = ref('')
 const description = ref('')
@@ -63,6 +64,7 @@ function editTask(){
         .then(function (response) {
             if (response.data.data != undefined) {
                 router.push('/tasks');
+                setInfo('Task successfully updated');
             }
         })
         .catch(handleAPIError);
