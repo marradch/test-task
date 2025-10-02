@@ -4,9 +4,6 @@
             <router-link class="btn btn-primary mt-2" to="/tasks">Back</router-link>
         </div>
     </div>
-    <div v-if="error" class="alert alert-danger mt-2" role="alert">
-        {{ error }}
-    </div>
 
     <div class="row justify-content-center mt-2">
         <div class="col-md-6">
@@ -34,6 +31,7 @@
 
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { handleAPIError } from '../helpers/helpers';
 
 const title = ref('')
 const description = ref('')
@@ -52,9 +50,9 @@ axios.get(`/api/tasks/${route.params.id}`)
     .catch((errorResponse) => {
         if (errorResponse?.response?.status === 404) {
             router.push({ name: 'not-found' });
-        } else if (errorResponse?.response?.data?.message != undefined) {
-            error.value = errorResponse.response.data.message;
         }
+
+        handleAPIError()
     });
 
 function editTask(){
@@ -67,11 +65,7 @@ function editTask(){
                 router.push('/tasks');
             }
         })
-        .catch(function (errorResponse) {
-            if (errorResponse?.response?.data?.message != undefined) {
-                error.value = errorResponse.response.data.message;
-            }
-        });
+        .catch(handleAPIError);
 }
 </script>
 

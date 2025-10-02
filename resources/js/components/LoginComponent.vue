@@ -1,8 +1,5 @@
 <template>
-    <div v-if="error" class="alert alert-danger mt-2" role="alert">
-        {{ error }}
-    </div>
-    <div v-else class="row justify-content-center mt-2">
+    <div class="row justify-content-center mt-2">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">Login</div>
@@ -30,6 +27,8 @@ import { login } from '../store/auth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { handleAPIError } from '../helpers/helpers';
+
 const userEmail = ref('')
 const userPassword = ref('')
 const error = ref('')
@@ -46,10 +45,6 @@ function loginUser(){
                 router.push('/tasks');
             }
         })
-        .catch(function (error) {
-            if (error?.response?.data?.message != undefined) {
-                error.value = error.response.data.message;
-            }
-        });
+        .catch(handleAPIError);
 }
 </script>

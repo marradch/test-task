@@ -39,6 +39,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import { error } from '../store/alertMessages.js'
+import { handleAPIError } from '../helpers/helpers';
 
 const tasks = ref([]);
 const pagesCount = ref(0);
@@ -47,7 +49,7 @@ const currentPage = ref(1);
 loadTasks(1)
 
 function loadTasks(page) {
-    axios.get(`/api/tasks?page=${page}`)
+    axios.get(`/api/tasks555?page=${page}`)
         .then(function (response) {
             if (response?.data?.data != undefined) {
                 tasks.value = response?.data?.data;
@@ -60,12 +62,7 @@ function loadTasks(page) {
                 currentPage.value = response?.data?.meta.current_page;
             }
         })
-        .catch(function (errorResponse) {
-            if (errorResponse?.response?.data?.message != undefined) {
-                error.value = errorResponse.response.data.message;
-            }
-            console.log(errorResponse);
-        });
+        .catch(handleAPIError);
 }
 
 function deleteTask(id) {
@@ -81,12 +78,7 @@ function deleteTask(id) {
                 loadTasks(1);
             }
         })
-        .catch(function (errorResponse) {
-            if (errorResponse?.response?.data?.message != undefined) {
-                error.value = errorResponse.response.data.message;
-            }
-            console.log(errorResponse);
-        });
+        .catch(handleAPIError);
 }
 
 function setTaskCompletion(taskId, event) {
@@ -94,11 +86,6 @@ function setTaskCompletion(taskId, event) {
     axios.patch(`/api/tasks/set-completion/${taskId}`, {completed: isChecked})
         .then(function (response) {
         })
-        .catch(function (errorResponse) {
-            if (errorResponse?.response?.data?.message != undefined) {
-                error.value = errorResponse.response.data.message;
-            }
-            console.log(errorResponse);
-        });
+        .catch(handleAPIError);
 }
 </script>

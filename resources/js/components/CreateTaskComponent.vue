@@ -1,8 +1,4 @@
 <template>
-    <div v-if="error" class="alert alert-danger mt-2" role="alert">
-        {{ error }}
-    </div>
-
     <div class="row justify-content-center mt-2">
         <div class="col-md-6">
             <div class="card">
@@ -29,10 +25,10 @@
 
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { handleAPIError } from '../helpers/helpers';
 
 const title = ref('')
 const description = ref('')
-const error = ref('')
 
 const router = useRouter()
 
@@ -46,11 +42,7 @@ function createTask(){
                 router.push('/tasks')
             }
         })
-        .catch(function (errorResponse) {
-            if (errorResponse?.response?.data?.message != undefined) {
-                error.value = error.response.data.message
-            }
-        })
+        .catch(handleAPIError)
 }
 </script>
 
