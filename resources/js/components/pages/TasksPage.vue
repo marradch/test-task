@@ -1,42 +1,53 @@
 <template>
     <h1>Tasks</h1>
     <button class="btn btn-primary" @click="showModal = true">Create new task</button>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Completed</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(task, index) in tasks" :key="index">
-            <td>{{ task.title }}</td>
-            <td>{{ task.description }}</td>
-            <td>
-                <StatusToggle
-                    v-model="task.completed"
-                    :taskId="task.id"
-                />
-            </td>
-            <td>
-                <router-link class="btn btn-primary me-2"  :to="{ name: 'task-edit', params: { id: task.id } }">
-                    Edit
-                </router-link>
-                <button class="btn btn-danger" @click="deleteTask(task.id)">Delete</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="row row-cols-1 g-3 mt-3 mb-3">
+        <div class="col" v-for="(task, index) in tasks" :key="index">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ task.title }}</h5>
+                </div>
 
-    <div v-if="pagesCount >= 2">
+                <div class="card-body">
+                    <p class="card-text mb-0">
+                        {{ task.description }}
+                    </p>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div>
+                        <router-link
+                            class="btn btn-sm btn-primary me-2"
+                            :to="{ name: 'task-edit', params: { id: task.id } }"
+                        >
+                            Edit
+                        </router-link>
+                        <button
+                            class="btn btn-sm btn-danger"
+                            @click="deleteTask(task.id)"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                    <div>
+                        <StatusToggle
+                            v-model="task.completed"
+                            :taskId="task.id"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div v-if="pagesCount >= 2">
         <ul class="pagination justify-content-center">
             <li v-for="page in pagesCount" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
                 <a class="page-link" @click="loadTasks(page)" href="#">{{ page }}</a>
             </li>
         </ul>
-    </div>
+    </div>-->
+    <button v-if="hasMore" class="btn btn-primary" @click="loadTasks(currentPage + 1)">Load more</button>
     <Modal v-if="showModal" title="Create task" @close="showModal = false">
         <CreateTaskForm @created="showModal = false"/>
     </Modal>
@@ -50,9 +61,10 @@ import Modal from '../common/Modal.vue';
 import CreateTaskForm from '../common/CreateTaskForm.vue';
 
 const tasks = ref([]);
-const pagesCount = ref(0);
+//const pagesCount = ref(0);
 const currentPage = ref(1);
 const showModal = ref(false)
+const hasMore = ref(false);
 
 loadTasks(1)
 
@@ -60,13 +72,13 @@ function loadTasks(page) {
     axios.get(`/api/tasks?page=${page}`)
         .then(function (response) {
             if (response?.data?.data != undefined) {
-                tasks.value = response?.data?.data;
+                tasks.value = [...tasks.value, ...response?.data?.data];
                 let pagesCountResponse = response?.data?.meta.total / response?.data?.meta.per_page;
                 pagesCountResponse = parseInt(pagesCountResponse);
                 if (response?.data?.meta.total - pagesCountResponse * response?.data?.meta.per_page) {
                     pagesCountResponse++;
                 }
-                pagesCount.value = pagesCountResponse;
+                hasMore.value = response?.data?.meta.current_page != response?.data?.meta.last_page;
                 currentPage.value = response?.data?.meta.current_page;
             }
         })
