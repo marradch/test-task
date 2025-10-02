@@ -15,8 +15,10 @@
             <td>{{ task.title }}</td>
             <td>{{ task.description }}</td>
             <td>
-                <input @change="setTaskCompletion(task.id, $event)" type="checkbox" v-model="task.completed" :id="'task_' + index" />
-                <label :for="'task_' + index">{{ task.completed ? 'Yes' : 'No' }}</label>
+                <StatusToggle
+                    v-model="task.completed"
+                    :taskId="task.id"
+                />
             </td>
             <td>
                 <router-link class="btn btn-primary me-2"  :to="{ name: 'task-edit', params: { id: task.id } }">
@@ -41,6 +43,7 @@
 import { ref } from 'vue'
 import { error } from '../store/alertMessages.js'
 import { handleAPIError } from '../helpers/helpers';
+import StatusToggle from './common/StatusToggle.vue';
 
 const tasks = ref([]);
 const pagesCount = ref(0);
@@ -49,7 +52,7 @@ const currentPage = ref(1);
 loadTasks(1)
 
 function loadTasks(page) {
-    axios.get(`/api/tasks555?page=${page}`)
+    axios.get(`/api/tasks?page=${page}`)
         .then(function (response) {
             if (response?.data?.data != undefined) {
                 tasks.value = response?.data?.data;
@@ -77,14 +80,6 @@ function deleteTask(id) {
             if (response?.data?.success) {
                 loadTasks(1);
             }
-        })
-        .catch(handleAPIError);
-}
-
-function setTaskCompletion(taskId, event) {
-    const isChecked = event.target.checked ? 1 : 0;
-    axios.patch(`/api/tasks/set-completion/${taskId}`, {completed: isChecked})
-        .then(function (response) {
         })
         .catch(handleAPIError);
 }
