@@ -95,7 +95,10 @@ function deleteTask(id) {
     axios.delete(`/api/tasks/${id}`)
         .then(function (response) {
             if (response?.data?.success) {
-                loadTasks(1);
+                const index = tasks.value.findIndex(task => task.id === id);
+                if (index !== -1) {
+                    tasks.value.splice(index, 1);
+                }
             }
         })
         .catch(handleAPIError);

@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
-import LoginComponent from "./components/pages/LoginPage.vue";
-import TasksComponent from "./components/pages/TasksPage.vue";
-import CreateTaskComponent from "./components/pages/CreateTaskPage.vue";
-import EditTaskComponent from "./components/pages/EditTaskPage.vue";
+import LoginPage from "./components/pages/LoginPage.vue";
+import TasksPage from "./components/pages/TasksPage.vue";
+import TasksPageUsual from "./components/pages/TasksPageUsual.vue";
+import CreateTaskPage from "./components/pages/CreateTaskPage.vue";
+import EditTaskPage from "./components/pages/EditTaskPage.vue";
 const NotFoundPage = () => import(/* webpackChunkName: "not-found" */ './components/pages/NotFoundPage.vue')
 const TutorialSteps = () => import(/* webpackChunkName: "tasks-page" */ './components/pages/TutorialSteps.ts.vue')
 import { isAuthenticated } from './store/auth'
@@ -10,24 +11,28 @@ import { isAuthenticated } from './store/auth'
 const routes = [
     {
         path: '/login',
-        component: LoginComponent,
+        component: LoginPage,
     },
     {
         path: '/',
-        component: TasksComponent,
+        component: TasksPage,
     },
     {
         path: '/tasks',
-        component: TasksComponent,
+        component: TasksPage,
+    },
+    {
+        path: '/tasks-usual',
+        component: TasksPageUsual,
     },
     {
         path: '/task-edit/:id',
         name: 'task-edit',
-        component: EditTaskComponent,
+        component: EditTaskPage,
     },
     {
         path: '/create-task',
-        component: CreateTaskComponent,
+        component: CreateTaskPage,
     },
     {
         path: '/tutorial',

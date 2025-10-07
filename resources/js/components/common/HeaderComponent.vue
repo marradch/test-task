@@ -24,6 +24,9 @@
                             <router-link class="nav-link" to="/tasks">List of tasks</router-link>
                         </li>
                         <li class="nav-item">
+                            <router-link class="nav-link" to="/tasks-usual">List of tasks usual</router-link>
+                        </li>
+                        <li class="nav-item">
                             <button class="btn btn-link nav-link" @click="logoutUser">Logout</button>
                         </li>
                     </template>
