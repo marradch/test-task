@@ -1,13 +1,15 @@
 import { ref } from 'vue'
 
-export const isAuthenticated = ref(!!sessionStorage.getItem('sanctum_token'))
+const TOKEN_KEY = '';
+
+export const isAuthenticated = ref(!!sessionStorage.getItem(TOKEN_KEY))
 
 export function login(token) {
-    sessionStorage.setItem('sanctum_token', token)
+    sessionStorage.setItem(TOKEN_KEY, token)
     isAuthenticated.value = true
 }
 
 export function logout() {
-    sessionStorage.removeItem('sanctum_token')
+    sessionStorage.removeItem(TOKEN_KEY)
     isAuthenticated.value = false
 }
