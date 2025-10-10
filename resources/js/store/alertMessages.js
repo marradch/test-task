@@ -17,3 +17,9 @@ export function setInfo(text) {
         alertType.value = ''
     }, 2000)
 }
+
+export function clearAlert()
+{
+    alertText.value = ''
+    alertType.value = ''
+}

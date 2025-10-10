@@ -7,6 +7,7 @@ import EditTaskPage from "./components/pages/EditTaskPage.vue";
 const NotFoundPage = () => import(/* webpackChunkName: "not-found" */ './components/pages/NotFoundPage.vue')
 const TutorialSteps = () => import(/* webpackChunkName: "tasks-page" */ './components/pages/TutorialSteps.ts.vue')
 import { isAuthenticated } from './store/auth'
+import { clearAlert } from './store/alertMessages.js'
 
 const routes = [
     {
@@ -53,6 +54,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    clearAlert()
     if (to.path !== '/login') {
         if (isAuthenticated.value) {
             next()

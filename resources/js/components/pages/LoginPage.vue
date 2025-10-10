@@ -29,6 +29,8 @@ import { useRouter } from 'vue-router'
 
 import { handleAPIError } from '../../helpers/helpers';
 
+import { clearAlert } from '../../store/alertMessages.js'
+
 const userEmail = ref('')
 const userPassword = ref('')
 const error = ref('')
@@ -42,6 +44,7 @@ function loginUser(){
         .then(function (response) {
             if (response.data.data.token != undefined) {
                 login(response.data.data.token)
+                clearAlert()
                 router.push('/tasks');
             }
         })
