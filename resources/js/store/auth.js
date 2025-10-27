@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-const TOKEN_KEY = '';
+const TOKEN_KEY = 'sanctum_token';
 
 export const isAuthenticated = ref(!!sessionStorage.getItem(TOKEN_KEY))
 
