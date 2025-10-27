@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">Creation of new task</div>
                 <div class="card-body">
-                    <CreateTaskForm />
+                    <CreateTaskForm @created="router.push('/tasks')"/>
                 </div>
             </div>
         </div>
@@ -13,8 +13,7 @@
 
 <script setup>
 import CreateTaskForm from '../common/CreateTaskForm.vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter();
 </script>
-
-<style scoped>
-
-</style>

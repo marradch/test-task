@@ -14,14 +14,11 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { handleAPIError } from '../../helpers/helpers';
 import { setInfo } from '../../store/alertMessages';
 
 const title = ref('')
 const description = ref('')
-
-const router = useRouter()
 
 const emit = defineEmits(['created'])
 
@@ -36,10 +33,9 @@ function createTask(){
     })
         .then(function (response) {
             if (response.data.data != undefined) {
-                router.push('/tasks')
+                setInfo('Task successfully created')
+                emit('created')
             }
-            setInfo('Task successfully created')
-            emit('created')
         })
         .catch(handleAPIError)
 }
