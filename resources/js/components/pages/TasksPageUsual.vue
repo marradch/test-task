@@ -37,9 +37,11 @@
             </li>
         </ul>
     </div>
-    <Modal v-if="showModal" title="Create task" @close="showModal = false">
-        <CreateTaskForm @created="showModal = false"/>
-    </Modal>
+    <teleport to="body">
+        <Modal v-if="showModal" title="Create task" @close="showModal = false">
+            <CreateTaskForm @created="showModal = false"/>
+        </Modal>
+    </teleport>
 </template>
 
 <script setup>
