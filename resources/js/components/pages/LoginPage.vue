@@ -4,14 +4,16 @@
             <div class="card">
                 <div class="card-header">Login</div>
                 <div class="card-body">
-                    <form method="POST" @submit.prevent="loginUser">
+                    <form method="POST" @submit.prevent="onSubmit">
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="text" class="form-control" id="email" placeholder="Enter your email" required="required" v-model="userEmail" >
+                            <input type="text" class="form-control" :class="{ 'is-invalid': emailError }" id="email" placeholder="Enter your email" v-model="userEmail" >
+                            <div class="invalid-feedback">{{ emailError }}</div>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required="required" v-model="userPassword" >
+                            <input type="password" class="form-control" :class="{ 'is-invalid': emailError }" id="password" placeholder="Enter your password" v-model="userPassword" >
+                            <div class="invalid-feedback">{{ passwordError }}</div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Login</button>
                     </form>
@@ -27,17 +29,34 @@ import { login } from '../../store/auth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { handleAPIError } from '../../helpers/helpers';
+import { handleAPIError } from '../../helpers/helpers'
 
 import { clearAlert } from '../../store/alertMessages.js'
 
-const userEmail = ref('')
-const userPassword = ref('')
+import { useForm, useField } from "vee-validate";
+import * as yup from "yup";
+
 const error = ref('')
 
 const router = useRouter()
 
-function loginUser(){
+const schema = yup.object({
+    email: yup.string().email().required(),
+    password: yup.string().min(6).required(),
+});
+
+const { handleSubmit } = useForm({
+    validationSchema: schema,
+})
+
+const { value: userEmail, errorMessage: emailError } = useField("email");
+const { value: userPassword, errorMessage: passwordError } = useField("password");
+
+const onSubmit = handleSubmit((values) => {
+    loginUser()
+});
+
+function loginUser() {
     axios.post('/api/login',{
         email: userEmail.value, password: userPassword.value
     })
