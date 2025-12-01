@@ -1,6 +1,12 @@
 <template>
     <h1>Tasks</h1>
-    <button class="btn btn-primary" @click="showModal = true">Create new task</button>
+    <div class="row my-4">
+        <div class="col">
+            <div class="row">
+                <input @change="loadTasks(1, searchString)" type="text" class="form-control" v-model="searchString" placeholder="Search...">
+            </div>
+        </div>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -33,7 +39,7 @@
     <div v-if="pagesCount >= 2">
         <ul class="pagination justify-content-center">
             <li v-for="page in pagesCount" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
-                <a class="page-link" @click="loadTasks(page)" href="#">{{ page }}</a>
+                <a class="page-link" @click="loadTasks(page, searchString)">{{ page }}</a>
             </li>
         </ul>
     </div>
@@ -51,15 +57,20 @@ import StatusToggle from '../common/StatusToggle.vue';
 import Modal from '../common/Modal.vue';
 import CreateTaskForm from '../common/CreateTaskForm.vue';
 
-const tasks = ref([]);
-const pagesCount = ref(0);
-const currentPage = ref(1);
+const tasks = ref([])
+const pagesCount = ref(0)
+const currentPage = ref(1)
 const showModal = ref(false)
+const searchString = ref('');
 
 loadTasks(1)
 
-function loadTasks(page) {
-    axios.get(`/api/tasks?page=${page}`)
+function loadTasks(page, q) {
+    let url = `/api/tasks?page=${page}`;
+    if (q != undefined) {
+        url += `&q=${q}`;
+    }
+    axios.get(url)
         .then(function (response) {
             if (response?.data?.data != undefined) {
                 tasks.value = response?.data?.data;
@@ -91,3 +102,9 @@ function deleteTask(id) {
         .catch(handleAPIError);
 }
 </script>
+
+<style scoped>
+.page-item:not(.active):not(.disabled) .page-link {
+    cursor: pointer;
+}
+</style>

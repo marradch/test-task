@@ -10,9 +10,20 @@ use App\Http\Resources\TaskResource;
 
 class TaskController extends BaseController
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $tasks = Task::paginate(2);
+        $query = Task::query();
+
+        if ($request->filled('q')) {
+            $q = $request->input('q');
+
+            $query->where(function ($sub) use ($q) {
+                $sub->where('title', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%");
+            });
+        }
+
+        $tasks = $query->paginate(2);
 
         return TaskResource::collection($tasks)->response();
     }
