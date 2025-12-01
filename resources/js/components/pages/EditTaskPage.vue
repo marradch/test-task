@@ -10,14 +10,16 @@
             <div class="card">
                 <div class="card-header">Editing of task</div>
                 <div class="card-body">
-                    <form method="POST" @submit.prevent="editTask">
+                    <form method="POST" @submit.prevent="onSubmit">
                         <div class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" required="required" class="form-control" id="title" v-model="title">
+                            <input :class="{ 'is-invalid': titleError }" type="text" class="form-control" id="title" v-model="title">
+                            <div class="invalid-feedback">{{ titleError }}</div>
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea required="required" class="form-control" id="description" v-model="description"/>
+                            <textarea :class="{ 'is-invalid': descriptionError }" class="form-control" id="description" v-model="description"/>
+                            <div class="invalid-feedback">{{ descriptionError }}</div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-2">Send</button>
                     </form>
@@ -33,9 +35,20 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { handleAPIError } from '../../helpers/helpers';
 import { setInfo } from '../../store/alertMessages';
+import { useTaskForm } from '../../composables/useTaskForm';
 
-const title = ref('')
-const description = ref('')
+const {
+    title,
+    description,
+    titleError,
+    descriptionError,
+    handleSubmit
+} = useTaskForm();
+
+const onSubmit = handleSubmit((values) => {
+    editTask()
+});
+
 const error = ref('')
 
 const router = useRouter()

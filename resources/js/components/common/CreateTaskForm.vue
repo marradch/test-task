@@ -1,24 +1,36 @@
 <template>
-    <form method="POST" @submit.prevent="createTask">
+    <form method="POST" @submit.prevent="onSubmit">
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" required="required"  class="form-control" id="title" v-model="title">
+            <input :class="{ 'is-invalid': titleError }" type="text" class="form-control" id="title" v-model="title">
+            <div class="invalid-feedback">{{ titleError }}</div>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea required="required"  class="form-control" id="description" v-model="description"/>
+            <textarea :class="{ 'is-invalid': descriptionError }" class="form-control" id="description" v-model="description"/>
+            <div class="invalid-feedback">{{ descriptionError }}</div>
         </div>
         <button type="submit" class="btn btn-primary mt-2">Send</button>
     </form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { handleAPIError } from '../../helpers/helpers';
 import { setInfo } from '../../store/alertMessages';
 
-const title = ref('')
-const description = ref('')
+import { useTaskForm } from '../../composables/useTaskForm';
+
+const {
+    title,
+    description,
+    titleError,
+    descriptionError,
+    handleSubmit
+} = useTaskForm();
+
+const onSubmit = handleSubmit((values) => {
+    createTask()
+});
 
 const emit = defineEmits(['created'])
 
