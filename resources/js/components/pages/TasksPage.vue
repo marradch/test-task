@@ -1,6 +1,13 @@
 <template>
     <h1>Tasks</h1>
-    <button class="btn btn-primary" @click="showModal = true">Create new task</button>
+    <div class="row my-4">
+        <div class="col-6">
+            <input @change="applySearch()" type="text" class="form-control" v-model="searchString" placeholder="Search...">
+        </div>
+        <div class="col-6 text-end">
+            <button class="btn btn-primary" @click="showModal = true">Create new task</button>
+        </div>
+    </div>
     <div class="row row-cols-1 g-3 mt-3 mb-3">
         <div class="col" v-for="(task, index) in tasks" :key="index">
             <div class="card h-100">
@@ -40,14 +47,7 @@
         </div>
     </div>
 
-    <!--<div v-if="pagesCount >= 2">
-        <ul class="pagination justify-content-center">
-            <li v-for="page in pagesCount" :key="page" class="page-item" :class="{ 'active': page === currentPage }">
-                <a class="page-link" @click="loadTasks(page)" href="#">{{ page }}</a>
-            </li>
-        </ul>
-    </div>-->
-    <button v-if="hasMore" class="btn btn-primary" @click="loadTasks(currentPage + 1)">Load more</button>
+    <button v-if="hasMore" class="btn btn-primary" @click="loadTasks(currentPage + 1, searchString)">Load more</button>
     <teleport to="body">
         <Modal v-if="showModal" title="Create task" @close="showModal = false">
             <CreateTaskForm @created="showModal = false"/>
@@ -61,6 +61,7 @@ import { handleAPIError } from '../../helpers/helpers';
 import StatusToggle from '../common/StatusToggle.vue';
 import Modal from '../common/Modal.vue';
 import CreateTaskForm from '../common/CreateTaskForm.vue';
+const searchString = ref('');
 
 const tasks = ref([]);
 //const pagesCount = ref(0);
@@ -70,8 +71,17 @@ const hasMore = ref(false);
 
 loadTasks(1)
 
-function loadTasks(page) {
-    axios.get(`/api/tasks?page=${page}`)
+function applySearch() {
+    tasks.value = [];
+    loadTasks(1, searchString.value)
+}
+
+function loadTasks(page, q) {
+    let url = `/api/tasks?page=${page}`;
+    if (q != undefined) {
+        url += `&q=${q}`;
+    }
+    axios.get(url)
         .then(function (response) {
             if (response?.data?.data != undefined) {
                 tasks.value = [...tasks.value, ...response?.data?.data];

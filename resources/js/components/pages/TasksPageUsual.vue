@@ -2,9 +2,7 @@
     <h1>Tasks</h1>
     <div class="row my-4">
         <div class="col">
-            <div class="row">
-                <input @change="loadTasks(1, searchString)" type="text" class="form-control" v-model="searchString" placeholder="Search...">
-            </div>
+            <input @change="loadTasks(1, searchString)" type="text" class="form-control" v-model="searchString" placeholder="Search...">
         </div>
     </div>
     <table class="table">
