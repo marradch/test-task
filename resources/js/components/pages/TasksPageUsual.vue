@@ -5,7 +5,8 @@
             <input @change="loadTasks(1, searchString)" type="text" class="form-control" v-model="searchString" placeholder="Search...">
         </div>
     </div>
-    <table class="table">
+    <loader v-if="isLoading"/>
+    <table v-else class="table">
         <thead>
         <tr>
             <th>Title</th>
@@ -54,12 +55,14 @@ import { handleAPIError } from '../../helpers/helpers';
 import StatusToggle from '../common/StatusToggle.vue';
 import Modal from '../common/Modal.vue';
 import CreateTaskForm from '../common/CreateTaskForm.vue';
+import Loader from '../common/Loager.vue';
 
 const tasks = ref([])
 const pagesCount = ref(0)
 const currentPage = ref(1)
 const showModal = ref(false)
-const searchString = ref('');
+const searchString = ref('')
+const isLoading = ref(true)
 
 loadTasks(1)
 
@@ -68,6 +71,8 @@ function loadTasks(page, q) {
     if (q != undefined) {
         url += `&q=${q}`;
     }
+
+    isLoading.value = true
     axios.get(url)
         .then(function (response) {
             if (response?.data?.data != undefined) {
@@ -79,6 +84,7 @@ function loadTasks(page, q) {
                 }
                 pagesCount.value = pagesCountResponse;
                 currentPage.value = response?.data?.meta.current_page;
+                isLoading.value = false;
             }
         })
         .catch(handleAPIError);

@@ -47,6 +47,8 @@
         </div>
     </div>
 
+    <loader v-if="isLoading"/>
+
     <button v-if="hasMore" class="btn btn-primary" @click="loadTasks(currentPage + 1, searchString)">Load more</button>
     <teleport to="body">
         <Modal v-if="showModal" title="Create task" @close="showModal = false">
@@ -62,12 +64,14 @@ import StatusToggle from '../common/StatusToggle.vue';
 import Modal from '../common/Modal.vue';
 import CreateTaskForm from '../common/CreateTaskForm.vue';
 const searchString = ref('');
+import Loader from '../common/Loager.vue';
 
-const tasks = ref([]);
+const tasks = ref([])
 //const pagesCount = ref(0);
-const currentPage = ref(1);
+const currentPage = ref(1)
 const showModal = ref(false)
-const hasMore = ref(false);
+const hasMore = ref(false)
+const isLoading = ref(true)
 
 loadTasks(1)
 
@@ -77,6 +81,7 @@ function applySearch() {
 }
 
 function loadTasks(page, q) {
+    isLoading.value = true
     let url = `/api/tasks?page=${page}`;
     if (q != undefined) {
         url += `&q=${q}`;
@@ -92,6 +97,7 @@ function loadTasks(page, q) {
                 }
                 hasMore.value = response?.data?.meta.current_page != response?.data?.meta.last_page;
                 currentPage.value = response?.data?.meta.current_page;
+                isLoading.value = false;
             }
         })
         .catch(handleAPIError);
