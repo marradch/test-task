@@ -7,7 +7,7 @@ export function useTaskForm(initialValues = {}) {
         description: yup.string().required(),
     });
 
-    const { handleSubmit, setValues } = useForm({
+    const { handleSubmit, isSubmitting } = useForm({
         validationSchema: schema,
         initialValues,
     });
@@ -20,6 +20,7 @@ export function useTaskForm(initialValues = {}) {
         description,
         titleError,
         descriptionError,
-        handleSubmit
+        handleSubmit,
+        isSubmitting
     };
 }

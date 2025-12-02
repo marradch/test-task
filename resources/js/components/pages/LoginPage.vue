@@ -12,10 +12,10 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" :class="{ 'is-invalid': emailError }" id="password" placeholder="Enter your password" v-model="userPassword" >
+                            <input type="password" class="form-control" :class="{ 'is-invalid': passwordError }" id="password" placeholder="Enter your password" v-model="userPassword" >
                             <div class="invalid-feedback">{{ passwordError }}</div>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-2">Login</button>
+                        <button type="submit" class="btn btn-primary mt-2" :disabled="isSubmitting">Login</button>
                     </form>
                 </div>
             </div>
@@ -45,18 +45,20 @@ const schema = yup.object({
     password: yup.string().min(6).required(),
 });
 
-const { handleSubmit } = useForm({
+const { handleSubmit, isSubmitting } = useForm({
     validationSchema: schema,
 })
 
 const { value: userEmail, errorMessage: emailError } = useField("email");
 const { value: userPassword, errorMessage: passwordError } = useField("password");
 
-const onSubmit = handleSubmit((values) => {
-    loginUser()
+const onSubmit = handleSubmit(async (values) => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    await loginUser();
 });
 
-function loginUser() {
+async function loginUser() {
     axios.post('/api/login',{
         email: userEmail.value, password: userPassword.value
     })

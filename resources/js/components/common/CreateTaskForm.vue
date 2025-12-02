@@ -10,7 +10,10 @@
             <textarea :class="{ 'is-invalid': descriptionError }" class="form-control" id="description" v-model="description"/>
             <div class="invalid-feedback">{{ descriptionError }}</div>
         </div>
-        <button type="submit" class="btn btn-primary mt-2">Send</button>
+        <button type="submit" class="btn btn-primary mt-2" :disabled="isSubmitting">
+            <span v-if="isSubmitting">Sending...</span>
+            <span v-else>Send</span>
+        </button>
     </form>
 </template>
 
@@ -25,11 +28,14 @@ const {
     description,
     titleError,
     descriptionError,
-    handleSubmit
+    handleSubmit,
+    isSubmitting
 } = useTaskForm();
 
-const onSubmit = handleSubmit((values) => {
-    createTask()
+const onSubmit = handleSubmit(async (values) => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    await createTask()
 });
 
 const emit = defineEmits(['created'])
@@ -38,7 +44,7 @@ function close() {
     emit('created')
 }
 
-function createTask(){
+async function createTask(){
     axios.post('/api/tasks',{
         title: title.value,
         description: description.value
