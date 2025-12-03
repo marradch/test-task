@@ -22,7 +22,7 @@ import { handleAPIError } from "../../helpers/helpers";
 const props = defineProps({
     modelValue: {
         type: Boolean,
-        required: true
+        required: false
     },
     taskId: {
         type: Number,

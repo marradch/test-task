@@ -23,7 +23,9 @@ class TaskController extends BaseController
             });
         }
 
-        $tasks = $query->paginate(2);
+        $tasks = $query
+            ->orderBy('id', 'desc')
+            ->paginate(2);
 
         return TaskResource::collection($tasks)->response();
     }

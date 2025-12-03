@@ -52,7 +52,7 @@ async function createTask(){
         .then(function (response) {
             if (response.data.data != undefined) {
                 setInfo('Task successfully created')
-                emit('created')
+                emit('created', response.data.data)
             }
         })
         .catch(handleAPIError)

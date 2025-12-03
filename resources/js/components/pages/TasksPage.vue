@@ -52,7 +52,7 @@
     <button v-if="hasMore" class="btn btn-primary" @click="loadTasks(currentPage + 1, searchString)">Load more</button>
     <teleport to="body">
         <Modal v-if="showModal" title="Create task" @close="showModal = false">
-            <CreateTaskForm @created="showModal = false"/>
+            <CreateTaskForm @created="handleCreated"/>
         </Modal>
     </teleport>
 </template>
@@ -120,5 +120,10 @@ function deleteTask(id) {
             }
         })
         .catch(handleAPIError);
+}
+
+function handleCreated(data) {
+    showModal.value = false
+    tasks.value = [data, ...tasks.value];
 }
 </script>
