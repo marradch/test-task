@@ -49,7 +49,7 @@
 
     <loader v-if="isLoading"/>
 
-    <button v-if="hasMore" class="btn btn-primary" @click="loadTasks(currentPage + 1, searchString)">Load more</button>
+    <button v-if="nextCursor" class="btn btn-primary" @click="loadTasks()">Load more</button>
     <teleport to="body">
         <Modal v-if="showModal" title="Create task" @close="showModal = false">
             <CreateTaskForm @created="handleCreated"/>
@@ -63,28 +63,27 @@ import { handleAPIError } from '../../helpers/helpers';
 import StatusToggle from '../common/StatusToggle.vue';
 import Modal from '../common/Modal.vue';
 import CreateTaskForm from '../common/CreateTaskForm.vue';
-const searchString = ref('');
 import Loader from '../common/Loager.vue';
 
 const tasks = ref([])
-//const pagesCount = ref(0);
-const currentPage = ref(1)
+const nextCursor = ref('')
 const showModal = ref(false)
-const hasMore = ref(false)
 const isLoading = ref(true)
+const searchString = ref('');
 
-loadTasks(1)
+loadTasks()
 
 function applySearch() {
     tasks.value = [];
-    loadTasks(1, searchString.value)
+    loadTasks()
 }
 
-function loadTasks(page, q) {
+function loadTasks(q) {
     isLoading.value = true
-    let url = `/api/tasks?page=${page}`;
-    if (q != undefined) {
-        url += `&q=${q}`;
+    let url = `/api/tasks/cursor`;
+    url += '?cursor=' + nextCursor.value;
+    if (searchString.value !== '') {
+        url += `&q=${searchString.value}`;
     }
     axios.get(url)
         .then(function (response) {
@@ -95,8 +94,8 @@ function loadTasks(page, q) {
                 if (response?.data?.meta.total - pagesCountResponse * response?.data?.meta.per_page) {
                     pagesCountResponse++;
                 }
-                hasMore.value = response?.data?.meta.current_page != response?.data?.meta.last_page;
-                currentPage.value = response?.data?.meta.current_page;
+                //hasMore.value = response?.data?.meta.next_cursor;
+                nextCursor.value = response?.data?.meta.next_cursor;
                 isLoading.value = false;
             }
         })

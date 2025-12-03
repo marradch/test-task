@@ -21,5 +21,6 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/tasks/set-completion/{task}', [TaskController::class, 'setCompleted']);
+    Route::get('/tasks/cursor', [TaskController::class, 'cursor']);
     Route::apiResource('tasks', TaskController::class);
 });

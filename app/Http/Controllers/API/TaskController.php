@@ -7,25 +7,31 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\TaskResource;
+use App\Http\Services\TaskService;
 
 class TaskController extends BaseController
 {
+    private TaskService $service;
+
+    public function __construct(TaskService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index(Request $request): JsonResponse
     {
-        $query = Task::query();
+        $query = $this->service->getTaskQuery($request->input('q'));
 
-        if ($request->filled('q')) {
-            $q = $request->input('q');
+        $tasks = $query->paginate(2);
 
-            $query->where(function ($sub) use ($q) {
-                $sub->where('title', 'like', "%{$q}%")
-                    ->orWhere('description', 'like', "%{$q}%");
-            });
-        }
+        return TaskResource::collection($tasks)->response();
+    }
 
-        $tasks = $query
-            ->orderBy('id', 'desc')
-            ->paginate(2);
+    public function cursor(Request $request): JsonResponse
+    {
+        $query = $this->service->getTaskQuery($request->input('q'));
+
+        $tasks = $query->cursorPaginate(2);
 
         return TaskResource::collection($tasks)->response();
     }
